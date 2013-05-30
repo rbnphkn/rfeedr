@@ -1,0 +1,36 @@
+.spinner-img {
+  background-image: url(../images/spinner.gif);
+  height: 350px;
+  width: 350px;
+}
+
+#flip .page-wrapper{
+  -webkit-perspective:2000px;
+  -moz-perspective: 2000px;
+  -ms-perspective: 2000px;
+  perspective: 2000px;
+}
+
+#flip .turn-page {
+  background: #ddd;
+}
+
+#overlay {
+  width: 1100px;
+  height: 600px;
+  position: absolute;
+}
+
+.closePage {
+  width: 100px;
+  text-align: center;
+  margin: auto;
+  cursor: pointer;
+  background: #333;
+  color: #fafafa;
+  font-weight: bold;
+}
+
+.f-post.singp {
+  overflow-y: auto;
+}

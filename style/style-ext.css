@@ -34,3 +34,40 @@
 .f-post.singp {
   overflow-y: auto;
 }
+
+.f-title .left-buttons {
+  float: left;
+  margin-left: 50px;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+.clr {
+  clear: both;
+}
+
+.ml50 {
+  margin-left: 50px;
+}
+
+.mr50 {
+  margin-right: 50px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+h1, h2, h3, h4 {
+  line-height: 20px;
+}

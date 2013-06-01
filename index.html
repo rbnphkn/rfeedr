@@ -5,10 +5,10 @@
   <title>RFeedR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta name="description" content="Personal RSS Feed Reader" />
+  <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300,300italic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="./style/demo.css" />
   <link rel="stylesheet" type="text/css" href="./style/style.css" />
-  <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link rel="stylesheet" type="text/css" href="./style/style-ext.css" />
   <script type="text/javascript" src="./lib/jquery-2.0.1.js"></script>
   <script type="text/javascript" src="./lib/turn.min.js"></script>
@@ -35,16 +35,15 @@
   <div class="modal-body" ng-controller="SourceController">
     <form ng-submit="addSource()">
       <span>URL: <input type="text" ng-model="url" size="40" placeholder="Add a feed url here"></span>
-      <span class="ml10">Priority: <input type="text" ng-model="rscore" size="4"></span>
       <input class="ml10" type="submit" value="add">
     </form>
     <div>
       <span>Total of {{sources.length}} sources</span>
+      <span class="ml10">[<a href="#" class="updateSources" ng-click="updateSources();">Update Sources</a>]</span>
       <ul>
-        <li ng-repeat="source in sources">
+        <li ng-repeat="source in sources | orderBy:rscore:reverse">
           <input type="checkbox" ng-model="source.status">
           <span class="status-{{source.status}} ml10">{{source.url}}</span>
-          <span class="status-{{source.status}} ml10">{{source.rscore}}</span>
         </li>
       </ul>
     </div>

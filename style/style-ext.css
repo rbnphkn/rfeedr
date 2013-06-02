@@ -35,6 +35,10 @@
   overflow-y: auto;
 }
 
+.f-post.singp.box:after {
+  background: none;
+}
+
 .f-title .left-buttons {
   float: left;
   margin-left: 50px;

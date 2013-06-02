@@ -14,8 +14,9 @@
   <script type="text/javascript" src="./lib/turn.min.js"></script>
   <script type="text/javascript" src="./lib/angular.min.js"></script>
   <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./lib/helpers.js"></script>
   <script type="text/javascript" src="./lib/main.js"></script>
-  <script type="text/javascript" src="./lib/source.js"></script>
+  <script type="text/javascript" src="lib/app.js"></script>
 </head>
 <body>
 <div id="flip" class="container">
@@ -40,9 +41,9 @@
     <div>
       <span>Total of {{sources.length}} sources</span>
       <span class="ml10">[<a href="#" class="updateSources" ng-click="updateSources();">Update Sources</a>]</span>
-      <ul>
+      <ul class='unstyled'>
         <li ng-repeat="source in sources | orderBy:rscore:reverse">
-          <input type="checkbox" ng-model="source.status">
+          <input type="checkbox" ng-model="source.status" ng-true-value="YES" ng-false-value="NO" ng-change="sourceChange({{source}});">
           <span class="status-{{source.status}} ml10">{{source.url}}</span>
         </li>
       </ul>

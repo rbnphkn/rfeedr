@@ -10,7 +10,9 @@
     "async": "~0.2.8",
     "feedparser": "~0.15.3",
     "request": "~2.21.0",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "node-uuid": "~1.4.0",
+    "clone": "~0.1.9"
   },
   "engine": {
     "node": ">=.10.6"

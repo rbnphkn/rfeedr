@@ -39,7 +39,7 @@
       <input class="ml10" type="submit" value="add">
     </form>
     <div>
-      <span>Total of {{sources.length}} sources</span>
+      <span>Selected {{ selectedSources().length }} of {{sources.length}} sources</span>
       <span class="ml10">[<a href="#" class="updateSources" ng-click="updateSources();">Update Sources</a>]</span>
       <ul class='unstyled'>
         <li ng-repeat="source in sources | orderBy:rscore:reverse">

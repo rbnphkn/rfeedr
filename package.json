@@ -2,7 +2,7 @@
   "name": "RFeedR",
   "main": "index.html",
   "window": {
-    "toolbar": true,
+    "toolbar": false,
     "width": 1100,
     "height": 700
   },

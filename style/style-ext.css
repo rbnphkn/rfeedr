@@ -24,10 +24,20 @@
 .closePage {
   width: 100px;
   text-align: center;
-  margin: auto;
+  display: inline-block;
   cursor: pointer;
   background: #333;
   color: #fafafa;
+  font-weight: bold;
+}
+
+.forwardThis {
+  width: 100px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  background: #aaa;
+  color: #222;
   font-weight: bold;
 }
 
@@ -74,4 +84,9 @@
 
 h1, h2, h3, h4 {
   line-height: 20px;
+}
+
+.wcent {
+  margin: auto;
+  width: 200px;
 }

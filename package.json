@@ -12,7 +12,8 @@
     "request": "~2.21.0",
     "underscore": "~1.4.4",
     "node-uuid": "~1.4.0",
-    "clone": "~0.1.9"
+    "clone": "~0.1.9",
+    "moment": "~2.0.0"
   },
   "engine": {
     "node": ">=.10.6"

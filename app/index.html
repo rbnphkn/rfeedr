@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8" />
+  <title>RFeedR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="description" content="Personal RSS Feed Reader" />
+  <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300,300italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="./style/demo.css" />
+  <link rel="stylesheet" type="text/css" href="./style/style.css" />
+  <link rel="stylesheet" type="text/css" href="./style/style-ext.css" />
+  <script type="text/javascript" src="./lib/jquery-2.0.1.js"></script>
+  <script type="text/javascript" src="./lib/turn.min.js"></script>
+  <script type="text/javascript" src="./lib/angular.min.js"></script>
+  <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./lib/helpers.js"></script>
+  <script type="text/javascript" src="./lib/main.js"></script>
+  <script type="text/javascript" src="lib/app.js"></script>
+</head>
+<body>
+<div id="flip" class="container">
+  <div class="f-page">
+    <div class="main-title">
+      <h1>Personal RSS Feed Reader <strong>RFeedR</strong></h1>
+      <p id="instr" style="display:none;"><strong>Swipe or drag corners to flip the pages, click to open items</strong><br/><br/><a href="#" flipB-paginate='next' class='paginate'>Go To Next Page &raquo;</a></p>
+      <div id="loadSpin" class="spinner-img spinner">&nbsp;</div>
+    </div>
+  </div>
+</div>
+<div id="settings" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>RFeedR Settings</h3>
+  </div>
+  <div class="modal-body" ng-controller="SourceController">
+    <form ng-submit="addSource()">
+      <span>Feed URL: <input type="text" ng-model="url" size="40" placeholder="Add a feed url here"></span>
+      <input class="ml10" type="submit" value="add">
+    </form>
+    <div>
+      <span>Selected {{ selectedSources().length }} of {{sources.length}} sources</span>
+      <span class="ml10">[<a href="#" class="updateSources" ng-click="updateSources();">Update Sources</a>]</span>
+      <ul class='unstyled'>
+        <li ng-repeat="source in sources | orderBy:rscore:reverse">
+          <input type="checkbox" ng-model="source.status" ng-true-value="YES" ng-false-value="NO" ng-change="sourceChange({{source}});">
+          <span class="status-{{source.status}} ml10">{{source.url}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+  </div>
+</div>
+</body>
+</html>

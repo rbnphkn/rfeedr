@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ ! -d "logs" ]; then
+  mkdir logs;
+fi
+cd ./runtime && unzip *.zip;
+cd ../app && npm install;
+

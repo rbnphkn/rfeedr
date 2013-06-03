@@ -9,9 +9,11 @@ var _flipB_;
 var _lastDraw_ = (new Date()).getTime() + 6000000; // Just arbitrarily a future number
 var _pipeline_ = [];
 var _sources_ = [];
+var _idleTime_ = 0;
 var WAIT_BETWEEN_FETCH = 60000;
 var BATCHES = 10;
 var CLEANUP_LIMIT = 1000 * 60 * 60 * 24 * 10; // Cleanup articles older than 10 days
+var IDLE_MINS = 10; // 10 mins idle
 
 var _divConfigs_ =  [
                     ["*box w-25 h-70", "*box w-50 h-70 box-b-l box-b-r", "*box w-25 h-70", "box w-50 h-30 box-b-r title-top", "box w-50 h-30 title-top"],
@@ -31,6 +33,7 @@ function __main() {
     _fetchArticles();
   });
   _eventsBindings();
+  _idleWatch();
   _cleanupRoutine();
 }
 
@@ -39,7 +42,7 @@ function _eventsBindings() {
   _flipB_.on("click", ".f-post.singp", _showOriginal);
   _flipB_.on("click", ".f-post.singp a", _stopPostClicks);
   _flipB_.on("click", ".closePage", function() { _closePage(_flipB_.turn('page'), true); });
-  _flipB_.on("click", ".goHome", function() { location.reload(); })
+  _flipB_.on("click", ".goHome", function() { location.reload(); });
   _flipB_.on("click", ".goSettings", function () { $( "#settings" ).modal(); });
   _flipB_.on("click", ".paginate", _paginate);
   _flipB_.on("click", ".forwardThis", _sendEmail);
@@ -58,13 +61,31 @@ function _eventsBindings() {
   });
 }
 
+function _idleWatch() {
+  var idleInterval = setInterval(function() {
+    _idleTime_++;
+    if( _idleTime_ > IDLE_MINS ) {
+      location.reload();
+    }
+  }, 60000); // Check every minute 
+  
+  //Zero the idle timer on mouse movement.
+  $(document).on("mousemove", function (e) {
+    _idleTime_ = 0;
+  });
+  $(document).on("click", function(e) {
+    _idleTime_ = 0;
+  });
+  $(document).on("keypress", function (e) {
+    _idleTime_ = 0;
+  });
+}
+
 function _sendEmail(event) {
   var elem = $(event.target);
-  var link = "mailto:"
-          + "?subject=" + encodeURI(elem.attr('data-title'))
-          + "&body=" + encodeURI(elem.attr('data-title') + "\n\n" + elem.attr('data-url'))
-      ;
-
+  var link =  "mailto:" +
+              "?subject=" + encodeURI(elem.attr('data-title')) + 
+              "&body=" + encodeURI(elem.attr('data-title') + "\n\n" + elem.attr('data-url'));
   window.location.href = link;
 }
 
@@ -210,7 +231,7 @@ function _loadFixtureData(callback) {
     tx.executeSql('SELECT * FROM sourceList ORDER BY rscore DESC', [], function (tx, results) {
       var len = results.rows.length, i;
       var nextFetch = (new Date()).getTime();
-      if (len == 0) {
+      if (len === 0) {
         for (i in defaultSourceList) {
           _sourceInsert(tx, defaultSourceList[i], nextFetch + i * WAIT_BETWEEN_FETCH);
          }
@@ -251,15 +272,17 @@ function _allFeeds(sourceList, callback) {
         var post = posts[i][j],
             insertString = "('" + _uuid_.v1() + "', '" + post.link + "', '" + post.title.replace(/\'/g, '&quot;') + "', " + (new Date(post.pubdate)).getTime() + ", '" + post.description.replace(/\'/g, '&quot;').replace(/\n|\r/g, ' ') + "', '" +
                 (post.image && post.image.url ? post.image.url : "" ) + "', '" + post.sourceid + "', 'NO')";
-        (function(ins) {
-          _db_.transaction(function (tx) {
-            tx.executeSql("INSERT INTO posts (id, url, title, date, summary, image, sourceid, readStatus) VALUES " + ins);
-          });
-        })(insertString);
+        _insertP(insertString);
       }
     }
     callback(err);
   });
+}
+
+function _insertP(ins) {
+  _db_.transaction(function (tx) {
+    tx.executeSql("INSERT INTO posts (id, url, title, date, summary, image, sourceid, readStatus) VALUES " + ins);
+  }); 
 }
 
 function _writePage(pagePosts, alen, flipEnd) {
@@ -280,19 +303,19 @@ function _feedParser(source, callback) {
 
   var posts = [];
 
-  request(source.url)
-      .pipe(new FeedParser())
-      .on('error', function(error) {
+  request(source.url).
+      pipe(new FeedParser()).
+      on('error', function(error) {
         callback(error, posts);
-      })
-      .on('meta', function(meta) {
+      }).
+      on('meta', function(meta) {
         // Do nothing for now
-      })
-      .on('article', function(post) {
+      }).
+      on('article', function(post) {
         post.sourceid = source.sourceid;
         posts.push(post);
-      })
-      .on('end', function() {
+      }).
+      on('end', function() {
         callback(null, posts);
       });
 }
@@ -314,10 +337,10 @@ function _drawDiv(conf, pagePosts, singlePost) {
   for (var i=0; i < conf.length; i++) {
     var dc = conf[i];
     var hasImg = dc[0] == '*' ? (dc = dc.substr(1)) && true : false;
-    dc = hasImg && pagePosts[i] && pagePosts[i].image == "" ? dc.replace("box-img-left", "") : dc;
+    dc = hasImg && pagePosts[i] && pagePosts[i].image === "" ? dc.replace("box-img-left", "") : dc;
     elems += "<div class='f-post " + ( singlePost ? "singp" : "exp") + " " + dc + "' data-url='" + (pagePosts[i] ? pagePosts[i].url : "") + "'>";
     if (pagePosts[i]) {
-      if (hasImg && pagePosts[i].image != "") {
+      if (hasImg && pagePosts[i].image !== "") {
         elems += "<div class='img-cont'><img src='" + pagePosts[i].image + "'/></div>";
       }
       elems += "<h3>" + pagePosts[i].title + " <span>" + getDomainName( pagePosts[i].url ) + " • " + _moment_(pagePosts[i].date).fromNow() + "</span></h3>";
